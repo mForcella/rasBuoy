@@ -1,5 +1,5 @@
 var util = require('util');
-var SerialPort = require('serialport').SerialPort;
+var SerialPort = require('serialport');
 var xbee_api = require('xbee-api');
 
 var C = xbee_api.constants;
@@ -8,7 +8,7 @@ var xbeeAPI = new xbee_api.XBeeAPI({
     api_mode: 1
 });
 
-var serialport = new SerialPort("/dev/ttyUSB1", {
+var serialport = new SerialPort("/dev/ttyUSB0", {
     baudrate: 9600,
     parser: xbeeAPI.rawParser()
 });
