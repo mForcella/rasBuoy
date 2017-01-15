@@ -1,5 +1,5 @@
 var util = require('util');
-var SerialPort = require('serialport').SerialPort;
+var SerialPort = require('serialport');
 var xbee_api = require('xbee-api');
 var coord = require('./coord_helpers.js');
 
