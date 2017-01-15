@@ -1,17 +1,15 @@
-var ds18b20 = require('ds18b20');
+var sensor = require('ds18x20');
 
 exports.readTemp = function () {
     var byteData;
-    ds18b20.sensors(function (err, ids) {
-        var id = ids[0];
-        var data = [];
-        var dataString = "";
-        var temp = "temp|" + ds18b20.temperatureSync(id).toString();
-        var date = new Date();
-        var dataString = dataString + temp + "," + "date|" + date;
-        data.push(dataString);
-        byteData = toByteArray(data);
-    });
+    var id = sensor.list()[0];
+    var data = [];
+    var dataString = "";
+    var temp = "temp|" + sensor.get(id);
+    var date = new Date();
+    dataString = dataString + temp + "," + "date|" + date;
+    data.push(dataString);
+    byteData = toByteArray(data);
     return byteData;
 };
 
