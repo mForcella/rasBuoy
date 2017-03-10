@@ -16,7 +16,7 @@ sendData(byteData);
 
 function sendData(data) {
 
-    var serialport = new SerialPort("/dev/ttyUSB0", {
+    var serialport = new SerialPort("/dev/serial0", {
         baudrate: 9600,
         parser: xbeeAPI.rawParser()
     });
@@ -25,7 +25,7 @@ function sendData(data) {
         var frame_obj = {
             type: 0x10,
             id: 0x01,
-            destination64: "0013A20040E42735",
+            //destination64: "0013A20040E42735",
             broadcastRadius: 0x00,
             options: 0x00,
             data: data
