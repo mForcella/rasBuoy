@@ -8,15 +8,15 @@ exports.arrayToByteString = function(data) {
       if (key.indexOf("SENSOR_") > -1) {
          if (data[key]['MEASUREMENT_VALUE'] != null) {
             for (sensorKey in data[key]) {
-               dataString += sensorKey+"="+data[key][sensorKey]+",";
+               dataString += sensorKey+"="+data[key][sensorKey]+"<=>";
             }
          }
       } else {
-         dataString += key+"="+data[key]+",";
+         dataString += key+"="+data[key]+"<=>";
       }
    }
-   // remove trailing comma and convert to byte string
-   dataString = dataString.substring(0, dataString.length - 1);
+   // remove trailing separator and convert to byte string
+   dataString = dataString.substring(0, dataString.length - 3);
    // split string, 80 characters per chunk
    var byteData = [];
    var k = 0;
@@ -32,6 +32,10 @@ exports.arrayToByteString = function(data) {
       i += 80;
       // add identifier to data chunk
       chunk += "|"+id+"-"+k++;
+      // add end identifier
+      if (j == dataString.length) {
+         chunk += "%";
+      }
       data.push(chunk);
       byteData.push(toByteArray(data));
    }
