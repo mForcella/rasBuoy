@@ -1,0 +1,96 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><meta name="googlebot" content="NOODP" /><meta name="google-site-verification" content="nSYeDgyKM9mw5CWcZuD0xu7iSWXlJijAlg9rcxVOYf4" /><meta name="google-site-verification" content="6UEaC3SWhpGQvqRnSJIEm2swxXpM5Adn4dxZhFsNdw0" /><link rel="stylesheet" href="/css/rabbit.css" type="text/css" /><!--[if IE 6]>
+      <link rel="stylesheet" href="/css/rabbit-ie6.css" type="text/css" />
+      <![endif]--><link rel="icon" type="/image/vnd.microsoft.icon" href="/favicon.ico" /><link rel="stylesheet" href="/css/tutorial.css" type="text/css" /><script type="text/javascript" src="/js/site.js"></script><script type="text/javascript" src="/js/ga-bootstrap.js"></script><title>RabbitMQ - Messaging that just works</title>
+    
+  </head>
+  <body><div id="outerContainer"><div id="rabbit-logo"><a href="/"><img src="/img/rabbitmq_logo_strap.png" alt="RabbitMQ" width="253" height="53" /></a></div><div id="pivotal-logo"><a href="https://pivotal.io/"><img src="/img/logo-pivotal-118x25.png" alt="Pivotal" width="118" height="25" /></a></div><div id="nav-search"><div id="search-box"><form action="/search.html" method="get"><input type="text" name="q" size="25" id="search-query" value="Search RabbitMQ" onfocus="handle_SearchBoxFocus();" onblur="handle_SearchBoxBlur();" /><input type="submit" id="search-button" alt="Search" value="" /></form></div><ul class="mainNav"><li><a href="/features.html">Features</a></li><li><a href="/download.html">Installation</a></li><li><a href="/documentation.html">Docs</a></li><li><a href="/getstarted.html">Tutorials</a></li><li><a href="/services.html">Support</a></li><li><a href="/community.html">Community</a></li><li><a href="http://pivotal.io/careers/engineering">Pivotal is Hiring</a></li><li><a href="/blog/">Blog</a></li></ul></div><div class="nav-separator"></div>
+    
+    <div class="rgt-third">
+      <h3>
+	<span class="subscribe">
+	  <a href="news.atom">
+	    <img src="img/feed-icon-14x14.png" height="14" width="14" alt="Subscribe to our news" title="Subscribe to our news" />
+	  </a>
+	</span>Latest News
+      </h3>
+      <ol class="feed"><li><span class="news-date">21 Nov 2016</span><a href="/news.html#2016-11-21T18:00:00+03:00">RabbitMQ 3.6.6 release</a><br /></li><li><span class="news-date">21 Nov 2016</span><a href="/news.html#2016-11-21T17:00:00+03:00">RabbitMQ 3.5.8 release</a><br /></li><li><span class="news-date">05 Aug 2016</span><a href="/news.html#2016-08-05T18:00:00+03:00">RabbitMQ 3.6.5 release</a><br /></li><li><span class="news-date">29 Jul 2016</span><a href="/news.html#2016-07-29T18:00:00+03:00">RabbitMQ 3.6.4 release</a><br /></li><li><span class="news-date">06 Jul 2016</span><a href="/news.html#2016-07-06T18:00:00+03:00">RabbitMQ 3.6.3 release</a><br /></li></ol>
+
+      <h3>
+	<span class="subscribe">
+	  <a href="/blog/feed/">
+	    <img src="img/feed-icon-14x14.png" height="14" width="14" alt="Subscribe to our blog posts" title="Subscribe to our blog posts" />
+	  </a>
+	</span>Latest Blog Posts
+      </h3>
+      <ol class="feed"><li><a href="http://www.rabbitmq.com/blog/2016/12/15/brand-new-rabbitmqctl-in-3-7-0/">Brand new rabbitmqctl in 3.7.0</a><br /><span class="news-date"> 15 Dec 2016</span><span class="blog-author">Daniil Fedotov</span></li><li><a href="http://www.rabbitmq.com/blog/2016/11/30/metrics-support-in-rabbitmq-java-client-4-0/">Metrics support in RabbitMQ Java Client 4.0</a><br /><span class="news-date"> 30 Nov 2016</span><span class="blog-author">Arnaud Cogoluègnes</span></li><li><a href="http://www.rabbitmq.com/blog/2016/11/24/rabbitmq-java-client-4-0-is-released/">RabbitMQ Java Client 4.0 is released</a><br /><span class="news-date"> 24 Nov 2016</span><span class="blog-author">Arnaud Cogoluègnes</span></li><li><a href="http://www.rabbitmq.com/blog/2015/12/28/whats-new-in-rabbitmq-3-6-0/">What’s new in RabbitMQ 3.6.0</a><br /><span class="news-date"> 28 Dec 2015</span><span class="blog-author">Alvaro</span></li><li><a href="http://www.rabbitmq.com/blog/2015/10/06/new-credit-flow-settings-on-rabbitmq-3-5-5/">New Credit Flow Settings on RabbitMQ 3.5.5</a><br /><span class="news-date"> 06 Oct 2015</span><span class="blog-author">Alvaro</span></li></ol>
+    </div>
+
+    <div id="home-content">
+      <h3>What is RabbitMQ?</h3>
+      <ul id="large-bullets">
+        <li>Robust <a href="features.html">messaging</a> for applications</li>
+        <li><a href="getstarted.html">Easy to use</a></li>
+        <li>Runs on all major <a href="download.html">operating systems</a></li>
+        <li>Supports a huge number of <a href="devtools.html">developer platforms</a></li>
+        <li><a href="github.html">Open source</a> and <a href="services.html">commercially supported</a></li>
+      </ul>
+
+      <div id="home-what-is">
+        <h3>Get Started</h3>
+        <ul id="buttons">
+          <li>
+            <a href="download.html">
+              <h4>Download</h4>
+              <p>Server and clients for various operating systems and languages</p>
+            </a>
+          </li>
+          <li>
+            <a href="getstarted.html">
+              <h4>Tutorials</h4>
+              <p>Teach yourself RabbitMQ in six easy lessons</p>
+            </a>
+          </li>
+          <li>
+            <a href="documentation.html">
+              <h4>Documentation</h4>
+              <p>How to do almost anything with RabbitMQ</p>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <h3>Read More</h3>
+      <ul>
+        <li>
+          Languages:
+          <a href="devtools.html#java-dev">Java</a> |
+          <a href="devtools.html#dotnet-dev">.NET</a> |
+          <a href="devtools.html#ruby-dev">Ruby</a> |
+          <a href="devtools.html#python-dev">Python</a> |
+          <a href="devtools.html#php-dev">PHP</a> |
+          <a href="devtools.html#node-dev">JavaScript</a> |
+          <a href="devtools.html">more...</a>
+        </li>
+        <li>
+          Cloud:
+          <a href="http://docs.pivotal.io/rabbitmq-cf/index.html">Cloud Foundry</a> |
+          <a href="ec2.html">EC2</a> |
+          <a href="https://developers.google.com/cloud/rabbitmq/click-to-deploy">Google Compute Engine</a> |
+          <a href="devtools.html">more...</a>
+        </li>        
+      </ul>
+    </div>
+    
+    
+    
+  <div class="clear"></div><div class="pageFooter"><p><a href="/sitemap.html">Sitemap</a> |
+        <a href="/contact.html">Contact</a> |
+        <a href="https://github.com/rabbitmq/rabbitmq-website/">This Site is Open Source</a> |
+        <a href="https://pivotal.io/careers/engineering">Pivotal is Hiring</a></p><p id="copyright">
+        Copyright © 2007-Present <a href="https://pivotal.io/">Pivotal Software</a>, Inc. All rights reserved.
+        <a href="https://pivotal.io/terms-of-use">Terms of Use</a>,
+        <a href="https://pivotal.io/privacy-policy">Privacy</a> and
+        <a href="/trademark-guidelines.html">Trademark Guidelines</a></p></div></div></body>
+</html>

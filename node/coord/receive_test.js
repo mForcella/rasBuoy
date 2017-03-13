@@ -24,8 +24,8 @@ serialport.on('data', function (data) {
 // All frames parsed by the XBee will be emitted here
 // frame['data'] is a data string
 xbeeAPI.on("frame_object", function (frame) {
-    //console.log(">>", frame['data'].toString());
-    //console.log(">>", util.inspect(frame["data"].toString()));
-    var JSONData = coord.dataToJSON(frame['data'].toString());
-    console.log(JSONData);
+    console.log(">>", frame['data'].toString());
+//    console.log(">>", util.inspect(frame["data"].toString()));
+//    var JSONData = coord.dataToJSON(frame['data'].toString());
+//    console.log(JSONData);
 });
