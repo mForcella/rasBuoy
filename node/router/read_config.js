@@ -7,10 +7,18 @@ exports.readConfig = function(callback) {
    var configValues = {};
    var i = 0;
 
-   lineReader.open('router.conf', function(err, reader) {
+   lineReader.open('/home/pi/dev/rasBuoy/node/router/router.conf', function(err, reader) {
       if (err) throw err;
       while (reader.hasNextLine()) {
          reader.nextLine(function(err, line) {
+
+            // xbee port
+            if (line.indexOf("XBEE_PORT") > -1) {
+               var xbee_port = line.split("=")[1];
+               if (xbee_port.length > 0) {
+                  configValues["XBEE_PORT"] = xbee_port;
+               }
+            }
 
             // database values
             if (line.indexOf("HOST") > -1) {

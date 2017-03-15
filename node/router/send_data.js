@@ -7,9 +7,9 @@ var xbeeAPI = new xbee.XBeeAPI({
    api_mode: 1
 });
 
-exports.sendData = function(data) {
+exports.sendData = function(data,port) {
 
-   var serialport = new serial("/dev/serial0", { // ***get value from config file***
+   var serialport = new serial(port, {
       baudrate: 9600,
       parser: xbeeAPI.rawParser()
    });
