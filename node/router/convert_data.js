@@ -20,7 +20,7 @@ exports.arrayToByteString = function(data) {
    // split string, 80 characters per chunk
    var byteData = [];
    var k = 0;
-   var id = getIdentifier(0,1000000);
+   var id = getIdentifier(100000,1000000);
    for (var i = 0; i < dataString.length; i=i) {
       var data = [];
       if (i + 80 > dataString.length) {

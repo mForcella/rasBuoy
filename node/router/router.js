@@ -7,9 +7,11 @@ var config = require('./read_config.js');
 var db = require('./write_db.js');
 var converter = require('./convert_data.js');
 var xbee = require('./send_data.js');
+var adc = require('./measure_voltage.js');
 
 // read data from sensors
 var tempData = temp.readTemps();
+var xbeePort;
 
 // read config values
 config.readConfig(function(values){
@@ -27,16 +29,20 @@ config.readConfig(function(values){
       }
    }
 
-   // TODO read voltage
+   // measure voltage
+   adc.readVoltage(function(voltage){
+      configValues['VOLTAGE'] = voltage;
 
-   // write to database
-   db.writeDb(configValues);
+      // write to database
+      db.writeDb(configValues);
 
-   // convert to byte string
-   var byteData = converter.arrayToByteString(configValues);
+      // convert data to byte string
+      var byteData = converter.arrayToByteString(configValues);
 
-   // send to coordinator
-   sendToXbee(byteData,0);
+      // send to coordinator
+      xbeePort = configValues['XBEE_PORT'];
+      sendToXbee(byteData,0);
+   });
 });
 
 // recursive method takes data array and iterator. sends part of 
@@ -44,7 +50,7 @@ config.readConfig(function(values){
 // is clear, and recurses with next part of data.
 function sendToXbee(byteData,i) {
    if (i < byteData.length) {
-      xbee.sendData(byteData[i]);
+      xbee.sendData(byteData[i],xbeePort);
       sleep(2500).then(()=>{
          sendToXbee(byteData,++i);
       });

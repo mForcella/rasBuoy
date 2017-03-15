@@ -1,7 +1,8 @@
 // This module will query the gps and write latitude and longitude to router.conf
 
 var gpsd = require('node-gpsd');
-var router = require('./router_helpers.js');
+var lineReader = require('line-reader');
+var fs = require('fs');
 
 var latitudes = [];
 var longitudes = [];
@@ -97,7 +98,7 @@ listener.on('TPV', function(data) {
       latitude = latitude.toFixed(8);
       longitude = longitude.toFixed(8);
       // write output to router.conf
-      router.writeLocation(latitude,longitude);
+      writeLocation(latitude,longitude);
       // kill all the daemons
       for (var i = 0; i < 4; i++) {
          stopDaemon(i,daemons[i]);
@@ -123,3 +124,31 @@ setTimeout(function(){
    }
    process.exit();
 },30000);
+
+// writes the location to router.conf
+function writeLocation(latitude,longitude) {
+   lines = [];
+   // read router.conf into array
+   lineReader.eachLine('/home/pi/dev/rasBuoy/node/router/router.conf', function(line, last) {
+      lines.push(line);
+      if (last) {
+         var writeData = "";
+         // find and modify lat/long
+         for (var i = 0; i < lines.length; i++) {
+            if (lines[i].indexOf("LATITUDE") > -1) {
+               lines[i] = "LATITUDE="+latitude;
+            }
+            if (lines[i].indexOf("LONGITUDE") > -1) {
+               lines[i] = "LONGITUDE="+longitude;
+            }
+            // append line to write data
+            writeData += lines[i]+"\n"
+         }
+         // write data to router.conf
+         fs.writeFile('/home/pi/dev/rasBuoy/node/router/router.conf', writeData, function(err){
+            if(err){console.log(err);}
+         });
+         return false; // stop reading
+      }
+   });
+};
