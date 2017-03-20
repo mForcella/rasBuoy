@@ -28,7 +28,6 @@ config.readConfig(function(values){
    // get the serial port value
    var xbeePort = configValues['XBEE_PORT'];
 
-
    // open serial port
    serialport = new serial(xbeePort, {
       baudrate: 9600,
@@ -93,7 +92,7 @@ config.readConfig(function(values){
                   valueArray[key] = value;
                }
             }
-            // enter values into the database
+            // enter incoming values into the database
             incoming.writeDb(valueArray);
          }
       }
@@ -138,10 +137,11 @@ function readSensor() {
    // get xbee port
    xbeePort = configValues['XBEE_PORT'];
 
-
-   // uncomment lines below to measure voltage
-//   adc.readVoltage(function(voltage){
-//      configValues['VOLTAGE'] = voltage;
+   // attempt to measure voltage
+   adc.readVoltage(function(voltage){
+      if (voltage > 0) {
+         configValues['VOLTAGE'] = voltage;
+      }
 
       // write to database
       db.writeDb(configValues);
@@ -151,15 +151,14 @@ function readSensor() {
 
       // send data to xbee
       sendToXbee(byteData,serialport,0)
-//   });
+   });
 }
 
-// sends part of array to xbee, sleeps for 5 seconds to ensure that 
-// serial port is clear, and recurses with next part of data
+// send part of data to xbee, sleep for 1 and continue
 function sendToXbee(byteData,serialport,i) {
    if (i < byteData.length) {
       xbee.sendData(byteData[i],serialport);
-      sleep(5000).then(()=>{
+      sleep(1000).then(()=>{
          sendToXbee(byteData,serialport,++i);
       });
    }
