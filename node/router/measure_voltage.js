@@ -8,18 +8,22 @@ var chB = 1;
 var samplesPerSecond = '250'; // see index.js for allowed values for your chip  
 var progGainAmp = '4096'; // see index.js for allowed values for your chip  
 
-var reading  = 0;  
+var reading  = 0;
 
 exports.readVoltage = function(callback) {
-   if(!adc.busy)  
-   {
-      adc.readADCDifferential(chA, chB, progGainAmp, samplesPerSecond, function(err, data) {   
-         if(err)  
-         {
-            throw err;  
-         }
-         reading = Math.round(data)/1000;
+   if(!adc.busy) {
+      try {
+         adc.readADCDifferential(chA, chB, progGainAmp, samplesPerSecond, function(err, data) {
+            if(err) {
+               throw err;  
+            }
+            reading = Math.round(data)/1000;
+            callback(reading);
+         });  
+      } catch (err) {
          callback(reading);
-      });  
-   }  
+      }
+   } else {
+      callback(reading);
+   }
 };
