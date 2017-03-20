@@ -14,104 +14,106 @@ var serial = require('serialport');
 var xbee_api = require('xbee-api');
 var SerialPort = require('serialport');
 
+var configValues;
+var serialport;
+
 var xbeeAPI = new xbee_api.XBeeAPI({
     api_mode: 1
-});
-
-var xbeePort = "/dev/serial0";
-var configValues;
-
-// open serial port
-var serialport = new serial(xbeePort, {
-   baudrate: 9600,
-   parser: xbeeAPI.rawParser()
-});
-
-serialport.on("open", function() {
-   console.log("port is open");
-});
-
-// listen for incoming data
-xbeeAPI.on("frame_object", function (frame) {
-   if (frame['data'] != null) {
-      var stringArray = [];
-
-      // split the data frame into pieces
-      var data = frame['data'].toString();
-      var stringPart = data.split("|")[0];
-      var identPart = data.split("|")[1];
-      var identifier = identPart.split("-")[0];
-      var section = identPart.split("-")[1];
-
-      // check if we received the final piece
-      var done = false;
-      if (section.indexOf("%") > -1) {
-         // remove end identifier and mark section as done
-         section = section.split("%")[0];
-         done = true;
-      }
-
-      // get the current string array if it exists
-      if (dataArray[identifier] != null) {
-         stringArray = dataArray[identifier];
-      }
-      // add current piece to string array
-      stringArray[section] = stringPart;
-      dataArray[identifier] = stringArray;
-
-      // process the data when all pieces are received
-      if (done) {
-         // rebuild the string
-         var dataString = "";
-         for (chunk in stringArray) {
-            dataString += stringArray[chunk];
-         }
-
-         // get data values from string
-         var values = dataString.split("<=>");
-
-         // build dictionary from values
-         var valueArray = {};
-         var sensorNum = 0;
-         for (var i = 0; i < values.length; i++) {
-            if (values[i].indexOf("SENSOR_ID") > -1) {
-               var sensorArray = {};
-               for (var j = i; j < i + 6; j++) {
-                  var key = values[j].split("=")[0];
-                  var value = values[j].split("=")[1];
-                  sensorArray[key] = value;
-               }
-               i = i + 5;
-               valueArray['SENSOR_'+sensorNum++] = sensorArray;
-            } else {
-               var key = values[i].split("=")[0];
-               var value = values[i].split("=")[1];
-               valueArray[key] = value;
-            }
-         }
-         // enter values into the database
-         incoming.writeDb(valueArray);
-      }
-   }
 });
 
 // read config values
 config.readConfig(function(values){
    configValues = values;
 
-   sleep(300000).then(()=>{
+   // get the serial port value
+   var xbeePort = configValues['XBEE_PORT'];
+
+
+   // open serial port
+   serialport = new serial(xbeePort, {
+      baudrate: 9600,
+      parser: xbeeAPI.rawParser()
+   });
+
+   // listen for incoming data
+   xbeeAPI.on("frame_object", function (frame) {
+      if (frame['data'] != null) {
+         var stringArray = [];
+
+         // split the data frame into pieces
+         var data = frame['data'].toString();
+         var stringPart = data.split("|")[0];
+         var identPart = data.split("|")[1];
+         var identifier = identPart.split("-")[0];
+         var section = identPart.split("-")[1];
+
+         // check if we received the final piece
+         var done = false;
+         if (section.indexOf("%") > -1) {
+            // remove end identifier and mark section as done
+            section = section.split("%")[0];
+            done = true;
+         }
+
+         // get the current string array if it exists
+         if (dataArray[identifier] != null) {
+            stringArray = dataArray[identifier];
+         }
+         // add current piece to string array
+         stringArray[section] = stringPart;
+         dataArray[identifier] = stringArray;
+
+         // process the data when all pieces are received
+         if (done) {
+            // rebuild the string
+            var dataString = "";
+            for (chunk in stringArray) {
+               dataString += stringArray[chunk];
+            }
+
+            // get data values from string
+            var values = dataString.split("<=>");
+
+            // build dictionary from values
+            var valueArray = {};
+            var sensorNum = 0;
+            for (var i = 0; i < values.length; i++) {
+               if (values[i].indexOf("SENSOR_ID") > -1) {
+                  var sensorArray = {};
+                  for (var j = i; j < i + 6; j++) {
+                     var key = values[j].split("=")[0];
+                     var value = values[j].split("=")[1];
+                     sensorArray[key] = value;
+                  }
+                  i = i + 5;
+                  valueArray['SENSOR_'+sensorNum++] = sensorArray;
+               } else {
+                  var key = values[i].split("=")[0];
+                  var value = values[i].split("=")[1];
+                  valueArray[key] = value;
+               }
+            }
+            // enter values into the database
+            incoming.writeDb(valueArray);
+         }
+      }
+   });
+
+   // start the sensor reading cycle
+   sleep(60000).then(()=>{
       startReading();
    });
 });
 
+// read the sensor every fifteen minutes
 function startReading() {
    readSensor();
-   sleep(300000).then(()=>{
+   sleep(900000).then(()=>{
       startReading();
    });
 }
 
-// every 15 minutes
+// takes a reading from the temperature sensor
 function readSensor() {
    // read data from sensors
    var tempData = temp.readTemps();
@@ -136,7 +138,8 @@ function readSensor() {
    // get xbee port
    xbeePort = configValues['XBEE_PORT'];
 
-   // measure voltage
+
+   // uncomment lines below to measure voltage
 //   adc.readVoltage(function(voltage){
 //      configValues['VOLTAGE'] = voltage;
 
@@ -148,7 +151,6 @@ function readSensor() {
 
       // send data to xbee
       sendToXbee(byteData,serialport,0)
-
 //   });
 }
 
