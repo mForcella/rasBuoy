@@ -15,13 +15,10 @@ exports.readVoltage = function(callback) {
    {
       adc.readADCDifferential(chA, chB, progGainAmp, samplesPerSecond, function(err, data) {   
          if(err)  
-         {  
-            //logging / troubleshooting code goes here...  
+         {
             throw err;  
-         }  
-         // if you made it here, then the data object contains your reading!  
+         }
          reading = Math.round(data)/1000;
-         // any other data processing code goes here...  
          callback(reading);
       });  
    }  

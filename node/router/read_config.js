@@ -5,13 +5,16 @@ var lineReader = require('line-reader');
 exports.readConfig = function(callback) {
 
    var configValues = {};
-   var i = 0;
+   var sensorId = 0;
+   var lines = [];
 
-   lineReader.open('/home/pi/dev/rasBuoy/node/router/router.conf', function(err, reader) {
-      if (err) throw err;
-      while (reader.hasNextLine()) {
-         reader.nextLine(function(err, line) {
-
+   // read lines config into array
+   lineReader.eachLine('/home/pi/dev/rasBuoy/node/router/router.conf', function(line, last) {
+      lines.push(line);
+      if (last) {
+         // get data from config file
+         for (var i = 0; i < lines.length; i++) {
+            var line = lines[i];
             // xbee port
             if (line.indexOf("XBEE_PORT") > -1) {
                var xbee_port = line.split("=")[1];
@@ -51,7 +54,7 @@ exports.readConfig = function(callback) {
                   configValues["TABLE"] = table;
                }
             }
-
+      
             // node values
             if (line.indexOf("NODE_ID") > -1) {
                var nodeID = line.split("=")[1];
@@ -77,7 +80,7 @@ exports.readConfig = function(callback) {
                   configValues["ENVIRONMENT"] = environment;
                }
             }
-
+      
             // sensor values
             if (line.indexOf("SENSOR_ID") > -1) {
                var sensorValues = {};
@@ -85,31 +88,25 @@ exports.readConfig = function(callback) {
                if (sensorID.length > 0) {
                   sensorValues["SENSOR_ID"] = sensorID;
                }
-               reader.nextLine(function(err,line){
-                  var depth = line.split("=")[1];
-                  if (depth.length > 0) {
-                     sensorValues["DEPTH_M"] = depth;
-                  }
-               });
-               reader.nextLine(function(err,line){
-                  var measurementType = line.split("=")[1];
-                  if (measurementType.length > 0) {
-                     sensorValues["MEASUREMENT_TYPE"] = measurementType;
-                  }
-               });
-               reader.nextLine(function(err,line){
-                  var measurementUnits = line.split("=")[1];
-                  if (measurementUnits.length > 0) {
-                     sensorValues["MEASUREMENT_UNITS"] = measurementUnits;
-                  }
-                  configValues["SENSOR_"+i++] = sensorValues;
-               });
+               line = lines[++i];
+               var depth = line.split("=")[1];
+               if (depth.length > 0) {
+                  sensorValues["DEPTH_M"] = depth;
+               }
+               line = lines[++i];
+               var measurementType = line.split("=")[1];
+               if (measurementType.length > 0) {
+                  sensorValues["MEASUREMENT_TYPE"] = measurementType;
+               }
+               line = lines[++i];
+               var measurementUnits = line.split("=")[1];
+               if (measurementUnits.length > 0) {
+                  sensorValues["MEASUREMENT_UNITS"] = measurementUnits;
+               }
+               configValues["SENSOR_"+sensorId++] = sensorValues;
             }
-         });
-      }
-      reader.close(function(err) {
-         if (err) throw err;
+         }
          callback(configValues);
-      });
+      }
    });
 };
