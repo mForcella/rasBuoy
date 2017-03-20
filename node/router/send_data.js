@@ -1,24 +1,16 @@
 // This module will send byte data through the XBee
 
-var serial = require('serialport');
 var xbee = require('xbee-api');
 
 var xbeeAPI = new xbee.XBeeAPI({
    api_mode: 1
 });
 
-exports.sendData = function(data,port) {
+exports.sendData = function(data,serialport) {
 
-   var serialport = new serial(port, {
-      baudrate: 9600,
-      parser: xbeeAPI.rawParser()
-   });
-
-   serialport.on("open", function () {
       var frame_obj = {
          type: 0x10,
          id: 0x01,
-         //destination64: "0013A20040E42735",
          broadcastRadius: 0x00,
          options: 0x00,
          data: data
@@ -26,6 +18,4 @@ exports.sendData = function(data,port) {
 
       serialport.write(xbeeAPI.buildFrame(frame_obj));
 
-      serialport.close();
-   });
-}
+};

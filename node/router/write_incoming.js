@@ -1,4 +1,4 @@
-// This module writes the sensor data to the database
+// This module writes incoming sensor data to the database
 
 var mysql = require('mysql');
 
@@ -29,7 +29,7 @@ exports.writeDb = function(configValues) {
    // get date
    var date = configValues['DATE'];
 
-   // get voltage
+   // get voltage if present
    var voltage = configValues['VOLTAGE'];
 
    // get sensor data if it exists
@@ -42,14 +42,28 @@ exports.writeDb = function(configValues) {
          var measurementUnits = sensorArray['MEASUREMENT_UNITS'];
          var measurementValue = sensorArray['MEASUREMENT_VALUE'];
          var uuid = sensorArray['ID'];
+         var select = 'SELECT COUNT(*) as count FROM '+table+' WHERE id=?';
 
-         var dataSet = {id:uuid,node_id:nodeID,datetime:date,latitude:latitude,longitude:longitude,voltage:voltage,environment:environment,sensor_id:sensorID,depth_m:depth,measurement_type:measurementType,measurement_units:measurementUnits,measurement_value:measurementValue};
+         // check if uuid already database
+         getUuid(connection, select, uuid, function(results){
+            var count = results[0].count;
+            if (count == 0) {
+               var dataSet = {id:uuid,node_id:nodeID,datetime:date,latitude:latitude,longitude:longitude,voltage:voltage,environment:environment,sensor_id:sensorID,depth_m:depth,measurement_type:measurementType,measurement_units:measurementUnits,measurement_value:measurementValue};
 
-         var query = connection.query('INSERT INTO '+table+' SET ?', dataSet, function (error, results) {
-           if (error) throw error;
+               var query = connection.query('INSERT INTO '+table+' SET ?', dataSet, function (error, results) {
+                  if (error) throw error;
+               });
+               //console.log(query.sql);
+            }
+            connection.end();
          });
-//         console.log(query.sql);
       }
    }
-   connection.end();
+}
+
+function getUuid(connection, select, uuid, callback) {
+   // check if uuid is already in database
+   connection.query(select, [uuid], function(error,results,fields) {
+      callback(results);
+   });
 }
