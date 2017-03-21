@@ -16,6 +16,7 @@ var SerialPort = require('serialport');
 
 var configValues;
 var serialport;
+var dataArray = {};
 
 var xbeeAPI = new xbee_api.XBeeAPI({
     api_mode: 1
@@ -93,7 +94,16 @@ config.readConfig(function(values){
                }
             }
             // enter incoming values into the database
-            incoming.writeDb(valueArray);
+            var duplicate = incoming.writeDb(valueArray);
+
+            // send data if it is new
+            if (!duplicate) {
+               // convert data to byte string
+               var byteData = converter.arrayToByteString(valueArray);
+
+               // send data to xbee
+               sendToXbee(byteData,serialport,0)
+            }
          }
       }
    });
@@ -154,7 +164,7 @@ function readSensor() {
    });
 }
 
-// send part of data to xbee, sleep for 1 and continue
+// send part of data to xbee, sleep for 1 second and continue
 function sendToXbee(byteData,serialport,i) {
    if (i < byteData.length) {
       xbee.sendData(byteData[i],serialport);
