@@ -1,0 +1,6 @@
+In order to connect to another machine you will have to 
+create a new user and add adminstrative permissions. 
+
+>rabbitmqctl add_user test test
+>rabbitmqctl set_user_tags test administrator
+>rabbitmqctl set_permissions -p / test ".*" ".*" ".*"

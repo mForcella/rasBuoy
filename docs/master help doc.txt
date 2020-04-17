@@ -1,0 +1,45 @@
+
+SETTING UP XBEE EXPLORER
+
+ - https://learn.sparkfun.com/tutorials/exploring-xbees-and-xctu#drivers-and-assembly
+
+UPDATING FIRMWARE FROM 802.15.4 TO DIGIMESH
+
+ - click update firmware
+ - select 'XB24-DM' from product family, 'XBee DigiMesh 2.4' from function set, newest version
+ - click update
+
+CONFIGURING XBEE MODULE IN XCTU
+
+ - connect xbee to PC via USB (xbee explorer or serial to usb cable)
+ - open xctu, add device com port
+ - provide a unique network ID for each module
+ - change to api mode
+ - write changes
+
+PYTHON - INSTALL PIP AND XBEE MODULES
+
+ - > sudo apt-get update
+ - > sudo apt-get install python-setuptools python-dev build-essential 
+ - > sudo easy_install pip
+ - > sudo pip install xbee
+
+ALLOW SERIAL ACCESS IN PI
+
+ - make sure userid (default pi) is a member of the dialout group
+   - > sudo usermod -a -G dialout pi
+ - stop the getty running on the GPIO serial console
+   OPTION 1
+   - > sudo nano /boot/cmdline.txt
+     - delete references 'console=ttyAMA0,115200' 'kgdboc=ttyAMA0,115200' if present
+   - > sudo nano /etc/inittab
+     - comment out line ':respawn:/sbin/getty -L ttyAMA0 115200 vt100'
+     - reboot
+   OPTION 2
+   - > sudo raspi-config
+     - [8] - advanced options
+     - [A8] - serial
+     - would you like a login shell to be accessible over serial? <no>
+     - serial is now disabled <ok>
+     - reboot
+
