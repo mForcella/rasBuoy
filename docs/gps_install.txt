@@ -1,0 +1,27 @@
+
+The following commands will install the gpsd client and the 
+gps pluggin for python. 
+
+> sudo apt-get update
+> sudo apt-get install gpsd gpsd-clients python-gps
+
+With the gps unit plugged in, typing the following:
+> sudo lsusb
+you should see an output similar to the following:
+ Bus 001 Device 003: ID 0424:ec00 Standard Microsystems Corp.
+ Bus 001 Device 004: ID 067b:2303 Prolific Technology, Inc. PL2303 Serial Port
+ Bus 001 Device 002: ID 0424:9512 Standard Microsystems Corp.
+ Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+
+The Prolific Technology entry corresponds to the G-Star IV gps unit. 
+It should create a USB port such as /dev/ttyUSB0, although the number
+may be different if you have multiple USB devices connected to the Pi. 
+
+Start the gps daemon by typing: 
+> sudo gpsd /dev/ttyUSB0 -F /var/run/gpsd.sock
+
+Now typing the following should give you a gps display:
+> cgps -s
+
+Make sure your gps unit has a clear view of the sky. If testing indoors
+it should work if it's on a window sill. 
